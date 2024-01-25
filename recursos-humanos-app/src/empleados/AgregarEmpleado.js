@@ -1,8 +1,7 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function AgregarEmpleado() {
+export default function AgregarEmpleado({ db }) {
 
     let navegacion = useNavigate();
 
@@ -21,11 +20,20 @@ export default function AgregarEmpleado() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const urlBase = "http://localhost:8080/rh-app/empleados";
-    await axios.post(urlBase, empleado);
-    // Redirigimos a la pagina de inicio
+
+  try {
+    // Utiliza la instancia de la base de datos para realizar operaciones
+    await db.collection("empleados").add({
+      nombre,
+      departamento,
+      sueldo: parseFloat(sueldo), 
+    });
     navegacion('/');
+  } catch (error) {
+    console.error("Error al agregar empleado", error);
   }
+};
+
 
   return (
     <div classNameName="container">

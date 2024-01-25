@@ -1,13 +1,10 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { db } from "../firebase";
 
 export default function EditarEmpleado() {
 
-  const urlBase = "http://localhost:8080/rh-app/empleados";
-
-  let navegacion = useNavigate();
-
+  const navegacion = useNavigate();
   const {id} = useParams();
 
   const [empleado, setEmpleado] = useState({
@@ -16,16 +13,19 @@ export default function EditarEmpleado() {
     sueldo: "",
   });
 
-  const { nombre, departamento, sueldo } = empleado
-
   useEffect(()=>{
     cargarEmpleado();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const cargarEmpleado = async () => {
-    const resultado = await axios.get(`${urlBase}/${id}`)
-    setEmpleado(resultado.data);
-  }
+    try {
+      const snapshot = await db.collection("empleados").doc(id).get();
+      setEmpleado(snapshot.data());
+    } catch (error) {
+      console.error("Error al cargar empleado", error);
+    }
+  };
 
   const onInputChange = (e) => {
     //Spread operator ...(expandir los atributos)
@@ -34,10 +34,19 @@ export default function EditarEmpleado() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    await axios.put(`${urlBase}/${id}`, empleado);
-    // Redirigimos a la pagina de inicio
-    navegacion('/');
-  }
+
+    try {
+      // Actualizar datos en la base de datos de Firebase
+      await db.collection("empleados").doc(id).set(empleado);
+
+      // Redirigir a la página de inicio
+      navegacion('/');
+    } catch (error) {
+      console.error("Error al editar empleado", error);
+    }
+  };
+
+  const { nombre, departamento, sueldo } = empleado; // Desestructura los campos del objeto empleado
 
   return (
     <div classNameName="container">

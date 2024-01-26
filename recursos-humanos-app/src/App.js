@@ -12,7 +12,7 @@ function App() {
       <BrowserRouter>
         <Navegacion />
         <Routes>
-          <Route exact path="/" element={<ListadoEmpleados />} />
+          <Route exact path="/" element={<ListadoEmpleados db={db}/>} />
           <Route exact path="/agregar" element={<AgregarEmpleado db={db}/>}/>
           <Route exact path="/editar/:id" element={<EditarEmpleado db={db}/>}/>
         </Routes>

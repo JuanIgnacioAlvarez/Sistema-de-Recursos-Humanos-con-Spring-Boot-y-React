@@ -3,7 +3,7 @@ import ListadoEmpleados from "./empleados/ListadoEmpleados";
 import Navegacion from "./plantilla/Navegacion";
 import AgregarEmpleado from "./empleados/AgregarEmpleado";
 import EditarEmpleado from "./empleados/EditarEmpleado";
-import { db } from "../firebase";
+import { db } from "./firebase";
 
 function App() {
   
